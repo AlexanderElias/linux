@@ -8,7 +8,9 @@ mkdir ~/.npm/global
 
 npm config set prefix '~/.npm/global'
 
-printf '# npm global fix\nexport PATH=~/.npm/global/bin:$PATH' >> ~/.bashrc
+echo '' >> ~/.bashrc
+echo '# npm global fix' >> ~/.bashrc
+echo 'export PATH=~/.npm/global/bin:$PATH' >> ~/.bashrc
 
 source ~/.bashrc
 
