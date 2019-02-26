@@ -4,7 +4,7 @@
 #	Description: Check if sudo was providied
 #
 
-function checkSudo () {
+function sudoCheck () {
 	if [[ $EUID -ne 0 ]]; then
 		echo ""
 		echo "Sudo Required"
