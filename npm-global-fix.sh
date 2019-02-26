@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mkdir ~/.npm/node_modules
 
 npm config set prefix ~/.npm/node_modules
