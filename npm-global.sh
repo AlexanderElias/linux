@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# fix npm global requiring sudo
+#	Author: Alexander Elias
+#	Description: fix npm global requiring sudo
 #
 
 mkdir ~/.npm/node_modules
