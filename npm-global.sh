@@ -4,6 +4,7 @@
 #	Description: fix npm global requiring sudo
 #
 
+mkdir ~/.npm
 mkdir ~/.npm/global
 
 npm config set prefix '~/.npm/global'
