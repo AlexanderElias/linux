@@ -37,10 +37,11 @@ mv flat-remix-gnome/Flat-Remix-Miami-fullPanel ~/.themes/.
 mv flat-remix-gnome/Flat-Remix-Darkest-fullPanel ~/.themes/.
 mv flat-remix-gnome/Flat-Remix-Miami-Darkest-fullPanel ~/.themes/.
 
-gsettings set org.gnome.desktop.screensaver lock-delay 5
-gsettings set org.gnome.desktop.screensaver picture-uri file:///home/alex/Pictures/flat-remix-smoke.jpg
-gsettings set org.gnome.desktop.background picture-uri file:///home/alex/Pictures/flat-remix-smoke.jpg
 gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Dark-fullPanel"
+
+gsettings set org.gnome.desktop.screensaver lock-delay 5
+gsettings set org.gnome.desktop.background picture-uri file:///home/alex/Pictures/flat-remix-smoke.jpg
+gsettings set org.gnome.desktop.screensaver picture-uri file:///home/alex/Pictures/flat-remix-smoke.jpg
 
 gsettings set org.gnome.desktop.interface true
 gsettings set org.gnome.desktop.interface "Adwaita-dark"
@@ -50,5 +51,3 @@ gsettings set org.gnome.desktop.interface.monospace-font-name "DejaVu Sans Mono 
 
 git config --global user.name "Alex Elias"
 git config --global user.email "alex.steven.elias@gmail.com"
-
-
