@@ -8,7 +8,7 @@ xbps-install -Syu
 xbps-install -Syu
 
 # install personal apps
-xbps-install -S chromium atom nodejs vim spotify steam chrome-gnome-shell
+xbps-install -S chromium atom nodejs vim spotify steam inkscape chrome-gnome-shell
 
 mkdir ~/.icons
 mkdir ~/.themes
