@@ -13,6 +13,10 @@ xbps-install -S chromium atom nodejs vim spotify steam inkscape chrome-gnome-she
 mkdir ~/.icons
 mkdir ~/.themes
 
+mkdir ~/Pictures
+git clone https://github.com/vokeio/linux.git
+cp ./wallpapers/flat-remix-smoke.jpg ~/Pictures/.
+
 git clone https://github.com/daniruiz/flat-remix.git
 git clone https://github.com/daniruiz/flat-remix-gtk.git
 git clone https://github.com/daniruiz/flat-remix-gnome.git
