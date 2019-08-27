@@ -3,30 +3,29 @@ Auto-unlocking of SSH keys through KWallet had been broken for me for a while. I
 
 I’m on Arch Linux, but the steps should be the same on other distributions.
 
-## Step 1: Install and configure kwallet-pam
+## Step 1: Install Required Programs
 
-`sudo pacman -S kwallet-pam kwalletmanager`
+`sudo pacman -S kwallet-pam kwalletmanager ksshaskpass`
 
-and load the modules from your /etc/pam.d/sddm:
+## Step 2: Configure sddm
+
+Past or uncomment these lines in this file.
+
+`vim /etc/pam.d/sddm`
 
 ```
-#%PAM-1.0
-
-auth            include         system-login
 auth            optional        pam_kwallet5.so
-
-account         include         system-login
-password        include         system-login
-
-session         include         system-login
 session         optional        pam_kwallet5.so auto_start
 ```
 
 This way, your KWallet is unlocked when you login. Note that your login and KWallet passwords must match, you must use Blowfish encryption for the wallet (not GPG), and the name of the wallet must be kdewallet (the default).
 
-## Step 2: Start ssh-agent through a systemd user unit file
+## Step 3: Configure ssh-agent
 
-`touch ~/.config/systemd/user/ssh-agent.service`
+Start ssh-agent through a systemd user unit file.
+
+`mkdir -p ~/.config/systemd/user`
+`vim ~/.config/systemd/user/ssh-agent.service`
 
 ```
 [Unit]
@@ -40,26 +39,29 @@ ExecStart=/usr/bin/ssh-agent -a $SSH_AUTH_SOCK
 [Install]
 WantedBy=basic.target
 ```
-Enable the service: `systemctl --user enable ssh-agent`
 
-Make sure you use WantedBy=basic.target and not WantedBy=default.target, as at least I had problems with ssh-agent not starting early enough with the latter.
+`systemctl --user enable ssh-agent`
 
-## Step 3: Install and configure ksshaskpass
+## Step 4: Configure ksshaskpass
 
-`sudo pacman -S ksshaskpass`
+Store the ssh passphrase in the wallet.
 
-Then create /etc/profile.d/sshaskpass.sh with:
+`mkdir -p ~/.config/plasma-workspace/env/`
+`vim ~/.config/plasma-workspace/env/ssh-askpass.sh`
+`chmod +x ~/.config/plasma-workspace/env/ssh-askpass.sh`
 
 ```
-#!/bin/bash
-export SSH_ASKPASS="/usr/bin/ksshaskpass"
+#!/bin/sh
+
+SSH_ASKPASS='/usr/bin/ksshaskpass'
+export SSH_ASKPASS
 ```
 
-This way, ksshaskpass, which will store your passphrase in your wallet, will be the preferred program to unlock your SSH keys.
+## Step 5: Run ssh-add on Plasma start
 
-## Step 4: Run ssh-add on Plasma start
-
-Create ~/config/autostart-scripts/ssh-add.sh with:
+`mkdir -p ~/config/autostart-scripts/`
+`vim ~/config/autostart-scripts/ssh-add.sh`
+`chmod +x ~/config/autostart-scripts/ssh-add.sh`
 
 ```
 #!/bin/sh
