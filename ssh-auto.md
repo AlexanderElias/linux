@@ -4,7 +4,7 @@ Auto-unlocking of SSH keys through KWallet had been broken for me for a while. I
 I’m on Arch Linux, but the steps should be the same on other distributions I think.
 
 ## Step 1: Install and configure kwallet-pam
-`pacman -S kwallet-pam`
+`pacman -S kwallet-pam kwalletmanager`
 
 and load the modules from your /etc/pam.d/sddm:
 
