@@ -47,7 +47,7 @@ WantedBy=basic.target
 
 Store the ssh passphrase in the wallet.
 
-`mkdir -p ~/.config/plasma-workspace/env/`
+`mkdir -p ~/.config/plasma-workspace/env`
 
 `vim ~/.config/plasma-workspace/env/ssh-askpass.sh`
 
@@ -62,11 +62,11 @@ export SSH_ASKPASS
 
 ## Step 5: Run ssh-add on Plasma start
 
-`mkdir -p ~/config/autostart-scripts/`
+`mkdir -p ~/.config/autostart-scripts`
 
-`vim ~/config/autostart-scripts/ssh-add.sh`
+`vim ~/.config/autostart-scripts/ssh-add.sh`
 
-`chmod +x ~/config/autostart-scripts/ssh-add.sh`
+`chmod +x ~/.config/autostart-scripts/ssh-add.sh`
 
 ```
 #!/bin/sh
