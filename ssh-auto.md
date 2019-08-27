@@ -25,6 +25,7 @@ This way, your KWallet is unlocked when you login. Note that your login and KWal
 Start ssh-agent through a systemd user unit file.
 
 `mkdir -p ~/.config/systemd/user`
+
 `vim ~/.config/systemd/user/ssh-agent.service`
 
 ```
@@ -47,7 +48,9 @@ WantedBy=basic.target
 Store the ssh passphrase in the wallet.
 
 `mkdir -p ~/.config/plasma-workspace/env/`
+
 `vim ~/.config/plasma-workspace/env/ssh-askpass.sh`
+
 `chmod +x ~/.config/plasma-workspace/env/ssh-askpass.sh`
 
 ```
@@ -60,7 +63,9 @@ export SSH_ASKPASS
 ## Step 5: Run ssh-add on Plasma start
 
 `mkdir -p ~/config/autostart-scripts/`
+
 `vim ~/config/autostart-scripts/ssh-add.sh`
+
 `chmod +x ~/config/autostart-scripts/ssh-add.sh`
 
 ```
