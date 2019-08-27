@@ -40,7 +40,9 @@ ExecStart=/usr/bin/ssh-agent -a $SSH_AUTH_SOCK
 [Install]
 WantedBy=basic.target
 ```
-and enable the service with systemctl --user enable ssh-agent. Make sure you use WantedBy=basic.target and not WantedBy=default.target, as at least I had problems with ssh-agent not starting early enough with the latter.
+Enable the service: `systemctl --user enable ssh-agent`
+
+Make sure you use WantedBy=basic.target and not WantedBy=default.target, as at least I had problems with ssh-agent not starting early enough with the latter.
 
 ## Step 3: Install and configure ksshaskpass
 
