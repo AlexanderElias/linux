@@ -80,10 +80,9 @@ Setting SSH_AUTH_SOCK is necessary, since apparently .bashrc is not picked up. M
 
 ## Step 5: Export SSH_AUTH_SOCK also in ~/.bashrc
 
-Make sure you have
+`vim ~/.bashrc`
 
 ```
+# ssh-agent start
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 ```
-
-also in .bashrc.
