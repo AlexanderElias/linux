@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# Arch Installer
-#
+# TODO partition options
+
+# --------------------------------------------------------------------------------
+# Instructions
+# --------------------------------------------------------------------------------
+
 # Boot the Arch Linux installer. Get online. Partition Disks.
 #
 #     wifi-menu
@@ -20,97 +24,141 @@
 #
 # In the Archiso, Download this file:
 #
-#     wget BLANK -O install.sh
-#     bash install.sh
+#     wget URL -O arch-installer.sh
+#     bash arch-installer.sh
 #
 
 # --------------------------------------------------------------------------------
-# Configuration 
+# Configuration
 # --------------------------------------------------------------------------------
 
-# Edit these things
 TIME_ZONE="America/Los_Angeles"
-SYSTEM_HOSTNAME="aos"
 EDITOR="nano"
 
-# Your user
-USERNAME="alex"
-PASSWORD="123"
-ROOT_PASSWORD="123"
+HOSTNAME=""
+USERNAME=""
+USER_PASSWORD=""
+ROOT_PASSWORD=""
 
-# Locales
 LOCALES="en_US.UTF-8 UTF-8"
 LANG="en_US.UTF-8"
 
-# Packages to install
 PACKAGES="base"
 PACKAGES+=" base-devel"
 PACKAGES+=" vim git sudo openssh"
+PACKAGES+=" networkmanager"
 PACKAGES+=" xorg"
 
-# Boot
 DRIVE="/dev/null"
+SWAP="16G"
 
-# Swap
-SWAP_SIZE="16G"
+# --------------------------------------------------------------------------------
+# Setup
+# --------------------------------------------------------------------------------
+
+# hostname
+while true; do
+  echo ""
+  echo -ne "Hostname: "
+  read answer
+  [ "$answer" != "" ] && break
+  echo "Hostname is required. Try again."
+done
+HOSTNAME="$answer"
+
+# root password
+while true; do
+  echo ""
+  read -s -p "Root Password: " answer
+  echo
+  read -s -p "Root Password (confirm): " confirm
+  echo
+  [ "$answer" = "$confirm" ] && [ "$answer" != "" ] && break
+  echo "Root passwords are empty or do not match. Try again."
+done
+ROOT_PASSWORD="$answer"
+
+# username
+while true; do
+  echo ""
+  echo -ne "Username: "
+  read  answer
+  [ "$answer" != "" ] && break
+  echo "Username is required. Try again."
+done
+USERNAME="$answer"
+
+# user password
+while true; do
+  echo ""
+  read -s -p "User Password: " answer
+  echo
+  read -s -p "User Password (confirm): " confirm
+  echo
+  [ "$answer" = "$confirm" ] && [ "$answer" != "" ] && break
+  echo "User passwords are empty or do not match. Try again."
+done
+USER_PASSWORD="$answer"
 
 # --------------------------------------------------------------------------------
 # Base System
 # --------------------------------------------------------------------------------
 
-# Ensure that there's something in /mnt
+# ensure that there's something in /mnt
 if ! findmnt /mnt &>/dev/null; then
   echo "Can't continue:"
   echo "Mount a drive to /mnt before running this."
   exit 1
 fi
 
-# Edit mirrorlist
+# mirrorlist
 echo ""
 echo "Press enter to edit /etc/pacman.d/mirrorlist."
-echo -ne "[E]dit [s]kip: "
+echo -ne "[e]dit [s]kip: "
 read answer
-if [[ "$answer" != "s" ]]; then "$EDITOR" /etc/pacman.d/mirrorlist; fi
+if [[ "$answer" != "s" ]]; then 
+  "$EDITOR" /etc/pacman.d/mirrorlist;
+fi
 
-# Install packages
+# packages
 pacstrap /mnt $PACKAGES
 
-# Generate fstab
+# fstab
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# Set timezone
+# timezone
 arch-chroot /mnt sh -c "
   ln -sf '/usr/share/zoneinfo/$TIME_ZONE' /etc/localtime
   hwclock --systohc
 "
 
-# Locale
+# locale
 arch-chroot /mnt sh -c "
   echo '$LOCALES' >> /etc/locale.gen
   echo 'LANG=$LANG' > /etc/locale.conf
   locale-gen
 "
 
-# Hostname
+# hostname
 arch-chroot /mnt sh -c "
-  echo '$SYSTEM_HOSTNAME' > /etc/hostname
+  echo '$HOSTNAME' > /etc/hostname
   echo '127.0.0.1 localhost' >> /etc/hosts
   echo '::1 localhost' >> /etc/hosts
-  echo '127.0.1.1 $SYSTEM_HOSTNAME.localdomain $SYSTEM_HOSTNAME' >> /etc/hosts
+  echo '127.0.1.1 $HOSTNAME.localdomain $HOSTNAME' >> /etc/hosts
 "
 
-# Root password
+# root password
 arch-chroot /mnt sh -c "
   (echo '$ROOT_PASSWORD'; echo '$ROOT_PASSWORD') | passwd
 "
 
-# Add user
+# user
 arch-chroot /mnt sh -c "
   useradd -Nm -g users -G wheel,sys,audio,input,video,network,rfkill '$USERNAME'
-  (echo '$ROOT_PASSWORD'; echo '$ROOT_PASSWORD') | passwd '$USERNAME'
+  (echo '$USER_PASSWORD'; echo '$USER_PASSWORD') | passwd '$USERNAME'
 "
 
-# Sudo
+# sudo
 arch-chroot /mnt sh -c "
   echo '%wheel ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
 "
@@ -119,7 +167,7 @@ arch-chroot /mnt sh -c "
 # Bootloader 
 # --------------------------------------------------------------------------------
 
-# ===== GRUB (BIOS mode) =====
+# grub
 arch-chroot /mnt sh -c "
   pacman -S --needed --noconfirm grub
   grub-install '$DRIVE'
@@ -130,13 +178,20 @@ arch-chroot /mnt sh -c "
 # Optional
 # --------------------------------------------------------------------------------
 
-# ===== Swap file =====
+# swap file
 arch-chroot /mnt sh -c "
- fallocate -l $SWAP_SIZE /swapfile
+ fallocate -l $SWAP /swapfile
  chmod 600 /swapfile
  mkswap /swapfile
  echo '/swapfile none swap defaults 0 0' | tee -a /etc/fstab
 "
+
+# systemd-swap
+#arch-chroot /mnt sh -c "
+# pacman -S --noconfirm --needed systemd-swap
+# sed -i 's/swapfc_enabled=0/swapfc_enabled=1/' /etc/systemd/swap.conf
+# systemctl enable systemd-swap
+#"
 
 # ===== DHCP for networking (recommended for VM's) =====
 # # Enabling this will enable the dhcpcd@<interface> service. Use
@@ -147,32 +202,27 @@ arch-chroot /mnt sh -c "
 #  sudo systemctl enable 'dhcpcd@$DHCP_INTERFACE'
 #"
 
-# ===== NetworkManager (recommended for laptops) =====
-#
-#arch-chroot /mnt sh -c "
-#  pacman -S --needed --noconfirm networkmanager
-#  systemctl enable NetworkManager.service
-#  systemctl mask NetworkManager-wait-online.service
-#"
+# networkmanager
+arch-chroot /mnt sh -c "
+ pacman -S --needed --noconfirm networkmanager
+ systemctl enable NetworkManager.service
+ systemctl mask NetworkManager-wait-online.service
+"
 
-# ===== Time synchronization =====
+# time synchronization
 arch-chroot /mnt sh -c "
  systemctl enable --now systemd-timesyncd.service
 "
 
-# ===== Pacman customizations =====
+# pacman customizations
 arch-chroot /mnt sh -c "
  sed -i 's/^#Color/Color/' /etc/pacman.conf
  sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
 "
 
-# ===== Swap file via systemd-swap =====
-#
-#arch-chroot /mnt sh -c "
-# pacman -S --noconfirm --needed systemd-swap
-# sed -i 's/swapfc_enabled=0/swapfc_enabled=1/' /etc/systemd/swap.conf
-# systemctl enable systemd-swap
-#"
+# --------------------------------------------------------------------------------
+# Done
+# --------------------------------------------------------------------------------
 
-echo ''
-echo 'Done :)'
+echo ""
+echo "Done :)"
