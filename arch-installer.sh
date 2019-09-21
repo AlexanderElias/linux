@@ -104,6 +104,23 @@ USER_PASSWORD="$answer"
 # Partition 
 # --------------------------------------------------------------------------------
 
+DISK_OUTPUT="$(sudo sfdisk -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
+DISKS=($DISK_OUTPUT)
+DISKS_LENGTH="${#DISKS[*]}"
+
+while true; do
+  echo
+  for (( i=0; i < $(( $DISKS_LENGTH )); i++ )) do
+    echo "${i}: ${DISKS[i]}"
+  done
+  echo -ne "Type the disk number you would like to partition: "
+  read answer
+  [ "$answer" != "" ] && break
+  echo
+  echo "Disk is required. Try again."
+done
+DISK="$answer"
+
 # might need dosfstools
 
 # format
