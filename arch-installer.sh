@@ -52,6 +52,10 @@ PACKAGES+=" xorg"
 DRIVE="/dev/null"
 SWAP="16G"
 
+DISK_OUTPUT="$(sudo sfdisk -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
+DISKS=($DISK_OUTPUT)
+DISKS_LENGTH="${#DISKS[*]}"
+
 # --------------------------------------------------------------------------------
 # Setup
 # --------------------------------------------------------------------------------
@@ -100,14 +104,7 @@ while true; do
 done
 USER_PASSWORD="$answer"
 
-# --------------------------------------------------------------------------------
-# Partition 
-# --------------------------------------------------------------------------------
-
-DISK_OUTPUT="$(sudo sfdisk -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
-DISKS=($DISK_OUTPUT)
-DISKS_LENGTH="${#DISKS[*]}"
-
+# disk
 while true; do
   echo
   for (( i=0; i < $(( $DISKS_LENGTH )); i++ )) do
@@ -120,6 +117,10 @@ while true; do
   echo "Disk is required. Try again."
 done
 DISK="$answer"
+
+# --------------------------------------------------------------------------------
+# Partition 
+# --------------------------------------------------------------------------------
 
 # might need dosfstools
 
