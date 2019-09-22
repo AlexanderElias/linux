@@ -1,32 +1,24 @@
 #!/usr/bin/env bash
 
-# TODO partition options
-
 # --------------------------------------------------------------------------------
 # Instructions
 # --------------------------------------------------------------------------------
 
-# Boot the Arch Linux installer. Get online. Partition Disks.
+# Boot Arch Linux installer. Get online.
 #
 #     wifi-menu
-#     ping 8.8.8.8
-#
-# Set up your partitions and mount things to /mnt.
-#
-#     # create a 'gpt' partition map with
-#     # - 1M partition (BIOS boot)
-#     # - big partition (Linux filesystem)
-#     lsblk
-#     cfdisk /dev/sda
-#
-#     mkfs.ext4 ...
-#     mount ...
 #
 # In the Archiso, Download this file:
 #
 #     wget URL -O arch-installer.sh
 #     bash arch-installer.sh
 #
+
+printf "\n"
+printf "|------------------------------------------|\n"
+printf "|        Vokeio Arch Installer             |\n"
+printf "|------------------------------------------|\n"
+printf "\n"
 
 # --------------------------------------------------------------------------------
 # Configuration
