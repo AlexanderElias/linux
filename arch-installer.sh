@@ -53,7 +53,7 @@ DRIVE="/dev/null"
 SWAP="16G"
 
 DISK_OUTPUT="$(sudo sfdisk -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
-DISKS=($DISK_OUTPUT)
+DISKS=('' $DISK_OUTPUT)
 DISKS_LENGTH="${#DISKS[*]}"
 
 # --------------------------------------------------------------------------------
@@ -107,31 +107,31 @@ USER_PASSWORD="$answer"
 # disk
 while true; do
   echo
-  for (( i=0; i < $(( $DISKS_LENGTH )); i++ )) do
-    echo "${i}: ${DISKS[i]}"
+  for (( i=0; i < $DISKS_LENGTH; i++ )) do
+    [ ${i} != 0 ] && echo "${i}) ${DISKS[i]}"
   done
   echo -ne "Type the disk number you would like to partition: "
   read answer
-  [ "$answer" != "" ] && break
+  [ "${DISKS[answer]}" != "" ] && break
   echo
   echo "Disk is required. Try again."
 done
-DISK="$answer"
+DISK="${DISKS[answer]}"
 
 # --------------------------------------------------------------------------------
 # Partition 
 # --------------------------------------------------------------------------------
 
-# might need dosfstools
+sfdisk --delete $DISK
 
 # format
-# mkfs.fat -F32 /dev/sdX1
-# mkfs.ext4 /dev/sdX2
+mkfs.fat -F32 "${DISK}1"
+mkfs.ext4 "${DISK}2"
 
 # mount
-# mount /dev/sdX2 /mnt
-# mkdir /mnt/efi
-# mount /dev/sdX1 /mnt/efi
+mount "${DISK}2" /mnt
+mkdir /mnt/efi
+mount "${DISK}1" /mnt/efi
 
 # --------------------------------------------------------------------------------
 # Base System
