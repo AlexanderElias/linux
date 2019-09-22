@@ -41,7 +41,6 @@ PACKAGES+=" vim git sudo openssh"
 PACKAGES+=" networkmanager"
 PACKAGES+=" xorg"
 
-DRIVE="/dev/null"
 SWAP="16G"
 
 DISK_OUTPUT="$(parted -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
