@@ -200,7 +200,7 @@ arch-chroot /mnt sh -c "
 # grub
 arch-chroot /mnt sh -c "
   pacman -S --needed --noconfirm grub
-  grub-install '$DRIVE'
+  grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
   grub-mkconfig -o /boot/grub/grub.cfg
 "
 
