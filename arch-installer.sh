@@ -14,11 +14,11 @@
 #     bash arch-installer.sh
 #
 
-printf "\n"
-printf "|------------------------------------------|\n"
-printf "|        Vokeio Arch Installer             |\n"
-printf "|------------------------------------------|\n"
-printf "\n"
+echo
+echo "|------------------------------------------|"
+echo "|        Vokeio Arch Installer             |"
+echo "|------------------------------------------|"
+echo
 
 # --------------------------------------------------------------------------------
 # Configuration
@@ -44,7 +44,7 @@ PACKAGES+=" xorg"
 DRIVE="/dev/null"
 SWAP="16G"
 
-DISK_OUTPUT="$(sudo sfdisk -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
+DISK_OUTPUT="$(parted -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
 DISKS=('' $DISK_OUTPUT)
 DISKS_LENGTH="${#DISKS[*]}"
 
@@ -53,6 +53,7 @@ DISKS_LENGTH="${#DISKS[*]}"
 # --------------------------------------------------------------------------------
 
 # hostname
+answer=""
 while true; do
   echo ""
   echo -ne "Hostname: "
@@ -63,6 +64,8 @@ done
 HOSTNAME="$answer"
 
 # root password
+answer=""
+confirm=""
 while true; do
   echo ""
   read -s -p "Root Password: " answer
@@ -75,8 +78,9 @@ done
 ROOT_PASSWORD="$answer"
 
 # username
+answer=""
 while true; do
-  echo ""
+  echo
   echo -ne "Username: "
   read  answer
   [ "$answer" != "" ] && break
@@ -85,8 +89,10 @@ done
 USERNAME="$answer"
 
 # user password
+answer=""
+confirm=""
 while true; do
-  echo ""
+  echo
   read -s -p "User Password: " answer
   echo
   read -s -p "User Password (confirm): " confirm
@@ -97,6 +103,7 @@ done
 USER_PASSWORD="$answer"
 
 # disk
+answer=""
 while true; do
   echo
   for (( i=0; i < $DISKS_LENGTH; i++ )) do
@@ -114,7 +121,12 @@ DISK="${DISKS[answer]}"
 # Partition 
 # --------------------------------------------------------------------------------
 
-sfdisk --delete $DISK
+parted -s $DISK \
+  mklabel gpt \
+  mkpart primary fat32 1MiB 512MiB \
+  set 1 boot on \
+  set 1 esp on \
+  mkpart primary ext4 512MiB 100%
 
 # format
 mkfs.fat -F32 "${DISK}1"
@@ -129,15 +141,8 @@ mount "${DISK}1" /mnt/efi
 # Base System
 # --------------------------------------------------------------------------------
 
-# ensure that there's something in /mnt
-if ! findmnt /mnt &>/dev/null; then
-  echo "Can't continue:"
-  echo "Mount a drive to /mnt before running this."
-  exit 1
-fi
-
 # mirrorlist
-echo ""
+echo
 echo "Press enter to edit /etc/pacman.d/mirrorlist."
 echo -ne "[e]dit [s]kip: "
 read answer
@@ -210,22 +215,6 @@ arch-chroot /mnt sh -c "
  mkswap /swapfile
  echo '/swapfile none swap defaults 0 0' | tee -a /etc/fstab
 "
-
-# systemd-swap
-#arch-chroot /mnt sh -c "
-# pacman -S --noconfirm --needed systemd-swap
-# sed -i 's/swapfc_enabled=0/swapfc_enabled=1/' /etc/systemd/swap.conf
-# systemctl enable systemd-swap
-#"
-
-# ===== DHCP for networking (recommended for VM's) =====
-# # Enabling this will enable the dhcpcd@<interface> service. Use
-# # `ip addr` to find this interface name.
-#
-#DHCP_INTERFACE=ens33
-#arch-chroot /mnt sh -c "
-#  sudo systemctl enable 'dhcpcd@$DHCP_INTERFACE'
-#"
 
 # networkmanager
 arch-chroot /mnt sh -c "
