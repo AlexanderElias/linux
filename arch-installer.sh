@@ -209,28 +209,28 @@ arch-chroot /mnt sh -c "
 
 # swap file
 arch-chroot /mnt sh -c "
- fallocate -l $SWAP /swapfile
- chmod 600 /swapfile
- mkswap /swapfile
- echo '/swapfile none swap defaults 0 0' | tee -a /etc/fstab
+    fallocate -l $SWAP /swapfile
+    chmod 600 /swapfile
+    mkswap /swapfile
+    echo '/swapfile none swap defaults 0 0' | tee -a /etc/fstab
 "
 
 # networkmanager
 arch-chroot /mnt sh -c "
- pacman -S --needed --noconfirm networkmanager
- systemctl enable NetworkManager.service
- systemctl mask NetworkManager-wait-online.service
+    pacman -S --needed --noconfirm networkmanager
+    systemctl enable NetworkManager.service
+    systemctl mask NetworkManager-wait-online.service
 "
 
 # time synchronization
 arch-chroot /mnt sh -c "
- systemctl enable --now systemd-timesyncd.service
+    systemctl enable --now systemd-timesyncd.service
 "
 
 # pacman customizations
 arch-chroot /mnt sh -c "
- sed -i 's/^#Color/Color/' /etc/pacman.conf
- sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
+    sed -i 's/^#Color/Color/' /etc/pacman.conf
+    sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
 "
 
 # --------------------------------------------------------------------------------
