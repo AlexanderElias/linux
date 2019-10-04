@@ -41,7 +41,9 @@ PACKAGES+=" vim git sudo openssh"
 PACKAGES+=" networkmanager"
 PACKAGES+=" xorg"
 
-SWAP="16G"
+RAM_OUTPUT=$(cat /proc/meminfo | sed -En 's/MemTotal:\s+([0-9]+) kB/\1/p')
+RAM=$(( RAM_OUTPUT / 1000000 ))
+SWAP="${RAM}G"
 
 DISK_OUTPUT="$(parted -l | sed -En 's/Disk (\/dev\/\w+):.*/\1/p')"
 DISKS=('' $DISK_OUTPUT)
@@ -225,12 +227,6 @@ arch-chroot /mnt sh -c "
 # time synchronization
 arch-chroot /mnt sh -c "
     systemctl enable --now systemd-timesyncd.service
-"
-
-# pacman customizations
-arch-chroot /mnt sh -c "
-    sed -i 's/^#Color/Color/' /etc/pacman.conf
-    sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
 "
 
 # --------------------------------------------------------------------------------
