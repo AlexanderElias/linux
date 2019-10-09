@@ -36,7 +36,7 @@ LOCALES="en_${COUNTRY}.UTF-8 UTF-8"
 LANG="en_${COUNTRY}.UTF-8"
 
 PACKAGES="base base-devel linux-zen"
-PACKAGES+=" git sudo openssh"
+PACKAGES+=" sudo openssh"
 PACKAGES+=" networkmanager"
 
 RAM_OUTPUT=$(cat /proc/meminfo | sed -En 's/MemTotal:\s+([0-9]+) kB/\1/p')
@@ -127,14 +127,20 @@ parted -s $DISK \
     set 1 esp on \
     mkpart primary ext4 512MiB 100%
 
+if [[ $DISK == nvme* ]]; then
+    PARTITION="${DISK}p"
+else
+    PARTITION="${DISK}"
+fi
+
 # format
-mkfs.fat -F32 "${DISK}1"
-mkfs.ext4 "${DISK}2"
+mkfs.fat -F32 "${PARTITION}1"
+mkfs.ext4 "${PARTITION}2"
 
 # mount
-mount "${DISK}2" /mnt
+mount "${PARTITION}2" /mnt
 mkdir /mnt/efi
-mount "${DISK}1" /mnt/efi
+mount "${PARTITION}1" /mnt/efi
 
 # --------------------------------------------------------------------------------
 # Base System
@@ -142,6 +148,13 @@ mount "${DISK}1" /mnt/efi
 
 # mirrorlist
 wget -O /etc/pacman.d/mirrorlist -q "https://www.archlinux.org/mirrorlist/?country=${COUNTRY}&protocol=http&protocol=https&ip_version=4&ip_version=6"
+echo '
+    ## Worldwide
+    #Server = http://mirrors.evowise.com/archlinux/$repo/os/$arch
+    #Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch
+    #Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+' >> /etc/pacman.d/mirrorlist
+
 sed -i 's/^#Server/Server/g' /etc/pacman.d/mirrorlist
 
 # packages
