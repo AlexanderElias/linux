@@ -149,10 +149,10 @@ mount "${PARTITION}1" /mnt/efi
 # mirrorlist
 wget -O /etc/pacman.d/mirrorlist -q "https://www.archlinux.org/mirrorlist/?country=${COUNTRY}&protocol=http&protocol=https&ip_version=4&ip_version=6"
 echo '
-    ## Worldwide
-    #Server = http://mirrors.evowise.com/archlinux/$repo/os/$arch
-    #Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch
-    #Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+## Worldwide
+#Server = http://mirrors.evowise.com/archlinux/$repo/os/$arch
+#Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch
+#Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
 ' >> /etc/pacman.d/mirrorlist
 
 sed -i 's/^#Server/Server/g' /etc/pacman.d/mirrorlist
