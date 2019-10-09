@@ -24,22 +24,20 @@ echo
 # Configuration
 # --------------------------------------------------------------------------------
 
-TIME_ZONE="America/Los_Angeles"
-EDITOR="nano"
-
 HOSTNAME=""
 USERNAME=""
 USER_PASSWORD=""
 ROOT_PASSWORD=""
 
-LOCALES="en_US.UTF-8 UTF-8"
-LANG="en_US.UTF-8"
+TIME_ZONE="America/Los_Angeles"
+COUNTRY="US"
 
-PACKAGES="base"
-PACKAGES+=" base-devel"
-PACKAGES+=" vim git sudo openssh"
+LOCALES="en_${COUNTRY}.UTF-8 UTF-8"
+LANG="en_${COUNTRY}.UTF-8"
+
+PACKAGES="base base-devel linux-zen"
+PACKAGES+=" git sudo openssh"
 PACKAGES+=" networkmanager"
-PACKAGES+=" xorg"
 
 RAM_OUTPUT=$(cat /proc/meminfo | sed -En 's/MemTotal:\s+([0-9]+) kB/\1/p')
 RAM=$(( RAM_OUTPUT / 1000000 ))
@@ -143,13 +141,8 @@ mount "${DISK}1" /mnt/efi
 # --------------------------------------------------------------------------------
 
 # mirrorlist
-echo
-echo "Press enter to edit /etc/pacman.d/mirrorlist."
-echo -ne "[e]dit [s]kip: "
-read answer
-if [[ "$answer" != "s" ]]; then
-    "$EDITOR" /etc/pacman.d/mirrorlist;
-fi
+wget -O /etc/pacman.d/mirrorlist -q "https://www.archlinux.org/mirrorlist/?country=${COUNTRY}&protocol=http&protocol=https&ip_version=4&ip_version=6"
+sed -i 's/^#Server/Server/g' /etc/pacman.d/mirrorlist
 
 # packages
 pacstrap /mnt $PACKAGES
@@ -227,6 +220,13 @@ arch-chroot /mnt sh -c "
 # time synchronization
 arch-chroot /mnt sh -c "
     systemctl enable --now systemd-timesyncd.service
+"
+
+# pacman customizations
+arch-chroot /mnt sh -c "
+    sed -i 's/^#Color/Color/' /etc/pacman.conf
+    sed -i 's/^#Include/Include/g' /etc/pacman.conf
+    sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
 "
 
 # --------------------------------------------------------------------------------
