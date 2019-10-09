@@ -127,7 +127,7 @@ parted -s $DISK \
     set 1 esp on \
     mkpart primary ext4 512MiB 100%
 
-if [[ $DISK == nvme* ]]; then
+if [[ $DISK == /dev/nvme* ]]; then
     PARTITION="${DISK}p"
 else
     PARTITION="${DISK}"
