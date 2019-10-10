@@ -35,9 +35,9 @@ COUNTRY="US"
 LOCALES="en_${COUNTRY}.UTF-8 UTF-8"
 LANG="en_${COUNTRY}.UTF-8"
 
-PACKAGES="base base-devel linux"
+PACKAGES="base base-devel linux linux-headers linux-firmware"
 PACKAGES+=" sudo openssh git vim"
-PACKAGES+=" wpa_supplicant dhcpcd dialog"
+PACKAGES+=" netctl wpa_supplicant dhcpcd dialog"
 
 RAM_OUTPUT=$(cat /proc/meminfo | sed -En 's/MemTotal:\s+([0-9]+) kB/\1/p')
 RAM=$(( RAM_OUTPUT / 1000000 ))
