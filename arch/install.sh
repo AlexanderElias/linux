@@ -4,14 +4,16 @@
 # Instructions
 # --------------------------------------------------------------------------------
 
-# Boot Arch Linux installer. Get online.
+# Connect Internet 
 #
 #     wifi-menu
 #
-# In the Archiso, Download this file:
+# Download File
 #
-#     wget URL -O arch-installer.sh
-#     bash arch-installer.sh
+#     wget https://vokeio.github.io/linux/arch/install.sh -O install.sh
+#
+# Run File
+#     bash install.sh
 #
 
 echo
