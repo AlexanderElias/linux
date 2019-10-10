@@ -14,6 +14,7 @@ mkdir ~/.themes
 mkdir ~/Pictures
 git clone https://github.com/vokeio/linux.git
 cp ./wallpapers/flat-remix-smoke.jpg ~/Pictures/.
+rm -r -f linux
 
 # git clone https://github.com/daniruiz/flat-remix.git
 # git clone https://github.com/daniruiz/flat-remix-gtk.git
