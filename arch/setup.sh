@@ -23,16 +23,3 @@ cd yay
 makepkg -si
 cd ..
 rm -r -f yay
-
-# apps
-pacman -S \
-chromium firefox \
-atom nodejs npm vim \
-ttf-fira-code ttf-fira-mono ttf-fira-sans \
-inkscape gimp \
-steam aws-cli
-
-yay -S spotify enpass-bin brave-bin hyper-bin
-
-# plasma apps
-# sudo pacman -S konsole kate dolphin
