@@ -4,7 +4,7 @@
 # Instructions
 # --------------------------------------------------------------------------------
 
-# Connect Internet 
+# Connect Internet
 #
 #     wifi-menu
 #
@@ -39,7 +39,9 @@ LANG="en_${COUNTRY}.UTF-8"
 
 PACKAGES="base base-devel linux linux-headers linux-firmware"
 PACKAGES+=" sudo openssh git vim"
-PACKAGES+=" netctl wpa_supplicant dhcpcd dialog"
+PACKAGES+=" networkmanager"
+PACKAGES+=" grub"
+# PACKAGES+=" netctl wpa_supplicant dhcpcd dialog"
 
 RAM_OUTPUT=$(cat /proc/meminfo | sed -En 's/MemTotal:\s+([0-9]+) kB/\1/p')
 RAM=$(( RAM_OUTPUT / 1000000 ))
@@ -208,7 +210,6 @@ arch-chroot /mnt sh -c "
 
 # grub
 arch-chroot /mnt sh -c "
-    pacman -S --needed --noconfirm grub
     grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
     grub-mkconfig -o /boot/grub/grub.cfg
 "
@@ -228,6 +229,12 @@ arch-chroot /mnt sh -c "
 # time synchronization
 arch-chroot /mnt sh -c "
     systemctl enable --now systemd-timesyncd.service
+"
+
+# networkmanager
+arch-chroot /mnt sh -c "
+    systemctl enable NetworkManager.service
+    systemctl mask NetworkManager-wait-online.service
 "
 
 # pacman customizations
