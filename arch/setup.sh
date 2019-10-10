@@ -10,16 +10,23 @@ if [ ! -f ~/.ssh/id_rsa ]; then
 	ssh-keygen -t rsa -b 4096 -C $EMAIL;
 fi
 
-# sudo wget "https://www.archlinux.org/mirrorlist/?country=US&protocol=http&protocol=https&ip_version=4&ip_version=6" -O /etc/pacman.d/mirrorlist
-# sudo sed -i 's/#Server/Server/g' /etc/pacman.d/mirrorlist
+# large console font
+# might want to add consolefont to HOOKS
+echo 'FONT=latarcyrheb-sun32' >> /etc/vconsole.conf
 
-sudo sed -i 's/#[multilib]/[multilib]' /etc/pacman.conf
-sudo sed -i 's/#Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist' /etc/pacman.conf
+sed -i 's/#[multilib]/[multilib]' /etc/pacman.conf
+sed -i 's/#Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist' /etc/pacman.conf
+
+# install yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd ..
+rm -r -f yay
 
 # always apps
-sudo pacman -S chromium firefox atom nodejs npm vim aws-cli steam
+pacman -S chromium firefox atom nodejs npm vim steam aws-cli
+yay -S spotify enpass-bin brave-bin hyper-bin
 
 # plasma apps
-sudo pacman -S konsole kate dolphin
-
-yay -S spotify enpass-bin brave-bin hyper-bin
+# sudo pacman -S konsole kate dolphin
