@@ -29,6 +29,7 @@ pacman -S \
 chromium firefox \
 atom nodejs npm vim \
 ttf-fira-code ttf-fira-mono ttf-fira-sans \
+inkscape gimp \
 steam aws-cli
 
 yay -S spotify enpass-bin brave-bin hyper-bin
