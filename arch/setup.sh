@@ -17,15 +17,20 @@ echo 'FONT=latarcyrheb-sun32' >> /etc/vconsole.conf
 sed -i 's/#[multilib]/[multilib]' /etc/pacman.conf
 sed -i 's/#Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist' /etc/pacman.conf
 
-# install yay
+# yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 cd ..
 rm -r -f yay
 
-# always apps
-pacman -S chromium firefox atom nodejs npm vim steam aws-cli
+# apps
+pacman -S \
+chromium firefox \
+atom nodejs npm vim \
+ttf-fira-code ttf-fira-mono ttf-fira-sans \
+steam aws-cli
+
 yay -S spotify enpass-bin brave-bin hyper-bin
 
 # plasma apps
