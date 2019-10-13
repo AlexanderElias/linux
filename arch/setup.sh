@@ -3,23 +3,43 @@
 NAME="Alexander Elias"
 EMAIL="alex.steven.elias@gmail.com"
 
-git config --global user.name $NAME
-git config --global user.email $EMAIL
+# install pacman apps
+pacman -S \
+steam aws-cli \
+inkscape gimp \
+chromium firefox \
+atom nodejs npm vim \
+ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-dejavu
+
+# need to downgrade from sudo
+
+# setup git
+git config --global user.name "$NAME"
+git config --global user.email "$EMAIL"
+
+# create ssh
+mkdir ~/.ssh
 
 if [ ! -f ~/.ssh/id_rsa ]; then
-	ssh-keygen -t rsa -b 4096 -C $EMAIL;
+	ssh-keygen -t rsa -b 4096 -C "$EMAIL";
 fi
 
-# large console font
-# might want to add consolefont to HOOKS
-echo 'FONT=latarcyrheb-sun32' >> /etc/vconsole.conf
-
-sed -i 's/#[multilib]/[multilib]' /etc/pacman.conf
-sed -i 's/#Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist' /etc/pacman.conf
-
-# yay
+# install yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 cd ..
 rm -r -f yay
+
+# install yay apps
+yay -S \
+spotify \
+enpass-bin \
+brave-bin \
+hyper
+
+# large console font
+# might want to add consolefont to HOOKS
+# echo 'FONT=latarcyrheb-sun32' >> /etc/vconsole.conf
+
+
