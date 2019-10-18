@@ -39,7 +39,7 @@ LANG="en_${COUNTRY}.UTF-8"
 
 PACKAGES="base base-devel linux linux-headers linux-firmware"
 PACKAGES+=" sudo openssh git vim"
-PACKAGES+=" networkmanager"
+PACKAGES+=" networkmanager bluez bluez-utils"
 PACKAGES+=" grub"
 # PACKAGES+=" netctl wpa_supplicant dhcpcd dialog"
 
@@ -241,6 +241,11 @@ arch-chroot /mnt sh -c "
 arch-chroot /mnt sh -c "
     systemctl enable NetworkManager.service
     systemctl mask NetworkManager-wait-online.service
+"
+
+# bluetooth
+arch-chroot /mnt sh -c "
+    systemctl enable bluetooth.service
 "
 
 # pacman customizations
