@@ -1,0 +1,12 @@
+[Desktop Entry]
+Comment=Jelly
+Name=Jelly
+X-KDE-PluginInfo-Author=Alexander Elias
+X-KDE-PluginInfo-Category=Plasma Look And Feel
+X-KDE-PluginInfo-Email=alex.steven.elias@gmail.com
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=MPL3.0
+X-KDE-PluginInfo-Name=Jelly
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=https://github.com/vokeio/jelly
+X-KDE-ServiceTypes=Plasma/LookAndFeel
